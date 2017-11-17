@@ -29,6 +29,7 @@ public class GameView extends SurfaceView implements Runnable {
     private int max_x;
     private int max_y;
     private float unit;
+    private int distanceTraveled;
 
 
 
@@ -63,7 +64,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
         updatePlayer();
-        moveBlocks(2);
+        moveThings(5);
     }
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
@@ -121,6 +122,13 @@ public class GameView extends SurfaceView implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
+
+    //General Functions
+    private void moveThings(int dy){
+        moveBlocks(dy);
+        distanceTraveled+=dy;
+    }
+
 
     //Player Ball Stuff
     private float pX;
