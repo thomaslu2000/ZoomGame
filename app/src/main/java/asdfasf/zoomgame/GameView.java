@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Thomas on 11/15/2017.
  */
@@ -42,6 +44,7 @@ public class GameView extends SurfaceView implements Runnable {
         unit=(screenX+screenY)/80;
         playerInit();
         brakeInit();
+        blocks.add(new Block(0,500,500,200));
 
     }
 
@@ -58,6 +61,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
         updatePlayer();
+        moveBlocks(1);
     }
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
@@ -65,7 +69,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.WHITE); //Just the background is now white
             //drawing in here
             drawPlayer();
-
+            drawBlocks();
             drawBrake();
             surfaceHolder.unlockCanvasAndPost(canvas); //When you finished drawing the frame, you have to do this to save the changes
         }
@@ -153,4 +157,13 @@ public class GameView extends SurfaceView implements Runnable {
         canvas.drawRect(brakeButton,paint);
     }
 
+    //Block Stuff
+    private ArrayList<Block>  blocks = new ArrayList<>();
+    private void drawBlocks(){
+        paint.setColor(Color.MAGENTA);
+        for (Block block : blocks) block.draw(canvas,paint);
+    }
+    private void moveBlocks(float dy){
+        for (Block block : blocks) block.goDown(dy);
+    }
 }
