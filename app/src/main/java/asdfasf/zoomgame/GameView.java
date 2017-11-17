@@ -31,6 +31,7 @@ public class GameView extends SurfaceView implements Runnable {
     private float unit;
 
 
+
     public GameView(Context context, int screenX, int screenY) {
         super(context);
         mContext=context;
@@ -43,8 +44,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         unit=(screenX+screenY)/80;
         playerInit();
-        brakeInit();
+
         blocks.add(new Block(0,500,500,200));
+        brakeInit();
 
     }
 
@@ -61,16 +63,17 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
         updatePlayer();
-        moveBlocks(1);
+        moveBlocks(2);
     }
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas(); //You have to do this whenever you want to draw
-            canvas.drawColor(Color.WHITE); //Just the background is now white
+            canvas.drawColor(Color.WHITE); //Background is white
             //drawing in here
             drawPlayer();
             drawBlocks();
             drawBrake();
+
             surfaceHolder.unlockCanvasAndPost(canvas); //When you finished drawing the frame, you have to do this to save the changes
         }
     }
@@ -83,17 +86,21 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private boolean touchMove;
+    private int lastX;
     public boolean onTouchEvent(MotionEvent motionEvent) { //These are the touch sensores
         int x = (int) motionEvent.getX(); //These get the touch locations
         int y = (int) motionEvent.getY();
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) { //a switch block for different ways they can touch
             case MotionEvent.ACTION_DOWN://just pressing down
+                touchMove = true;
             case MotionEvent.ACTION_MOVE://dragging finger
                 if (brakeButton.contains(x,y)) brakes=true;
-                else pVx+=(x-pX)/100;
+                lastX=x;
                 break;
             case MotionEvent.ACTION_UP://letting go
                 if (brakes) brakes=false;
+                touchMove=false;
 
 
         }
@@ -120,15 +127,17 @@ public class GameView extends SurfaceView implements Runnable {
     private float pY;
     private float pVx;
     private float pRadius;
-    private float pVxFriction=0.95f;
+    private float pVxFriction=0.93f;
+    private float pVxConstant;
     private RectF pRect;
     private boolean brakes=false;
 
     private void playerInit(){
         pX=max_x/2;
         pY=max_y*3/4;
-        pRadius=unit;
+        pRadius=unit*1.5f;
         pRect=new RectF(pX-pRadius,pY-pRadius,pX+pRadius,pY+pRadius);
+        pVxConstant = unit/10f;
     }
 
     private void drawPlayer(){
@@ -136,11 +145,12 @@ public class GameView extends SurfaceView implements Runnable {
         canvas.drawCircle(pX,pY,pRadius,paint);
     }
     private void updatePlayer(){
-        if ((pX<pRadius&&pVx<0) || (pX>max_x-pRadius&&pVx>0)) pVx=-pVx;
+        if ((pX<pRadius&&pVx<0) || (pX>max_x-pRadius&&pVx>0)) {pVx*=-0.25f;}
         pX+=pVx;
         pRect.offset(pVx,0);
-        pVx*=pVxFriction;
-        if (brakes) pVx*=0.85f;
+        if (touchMove&&!brakes) pVx+=(lastX-pX>0)? pVxConstant : -pVxConstant;
+        else if (!touchMove) pVx*=pVxFriction;
+        else if (brakes) pVx*=0.85f;
     }
 
     private void collision(Block block){
