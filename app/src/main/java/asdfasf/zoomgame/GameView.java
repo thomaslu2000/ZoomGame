@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Thomas on 11/15/2017.
@@ -30,7 +31,7 @@ public class GameView extends SurfaceView implements Runnable {
     private int max_y;
     private float unit;
     private int distanceTraveled;
-
+    private Random rand;
 
 
     public GameView(Context context, int screenX, int screenY) {
@@ -38,16 +39,14 @@ public class GameView extends SurfaceView implements Runnable {
         mContext=context;
         surfaceHolder = getHolder();
         paint = new Paint();
-
+        rand=new Random();
 
         max_x=screenX;
         max_y=screenY;
 
         unit=(screenX+screenY)/80;
         playerInit();
-
-        blocks.add(new Block(0,500,500,200));
-        brakeInit();
+        obstacleInit();
 
     }
 
@@ -64,7 +63,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
         updatePlayer();
-        moveThings(5);
+        moveThings(10);
     }
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
@@ -73,7 +72,6 @@ public class GameView extends SurfaceView implements Runnable {
             //drawing in here
             drawPlayer();
             drawBlocks();
-            drawBrake();
 
             surfaceHolder.unlockCanvasAndPost(canvas); //When you finished drawing the frame, you have to do this to save the changes
         }
@@ -96,11 +94,9 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN://just pressing down
                 touchMove = true;
             case MotionEvent.ACTION_MOVE://dragging finger
-                if (brakeButton.contains(x,y)) brakes=true;
                 lastX=x;
                 break;
             case MotionEvent.ACTION_UP://letting go
-                if (brakes) brakes=false;
                 touchMove=false;
 
 
@@ -126,6 +122,11 @@ public class GameView extends SurfaceView implements Runnable {
     //General Functions
     private void moveThings(int dy){
         moveBlocks(dy);
+        obstacleBound-=dy;
+        if (obstacleBound<=0){
+            generateObstacles(-max_y);
+            obstacleBound+=2*max_y;
+        }
         distanceTraveled+=dy;
     }
 
@@ -135,10 +136,9 @@ public class GameView extends SurfaceView implements Runnable {
     private float pY;
     private float pVx;
     private float pRadius;
-    private float pVxFriction=0.93f;
+    private float pVxFriction=0.85f;
     private float pVxConstant;
     private RectF pRect;
-    private boolean brakes=false;
 
     private void playerInit(){
         pX=max_x/2;
@@ -153,35 +153,41 @@ public class GameView extends SurfaceView implements Runnable {
         canvas.drawCircle(pX,pY,pRadius,paint);
     }
     private void updatePlayer(){
-        if ((pX<pRadius&&pVx<0) || (pX>max_x-pRadius&&pVx>0)) {pVx*=-0.25f;}
+        if ((pX<pRadius&&pVx<0) || (pX>max_x-pRadius&&pVx>0)) {pVx*=-0.1f;}
         pX+=pVx;
         pRect.offset(pVx,0);
-        if (touchMove&&!brakes) pVx+=(lastX-pX>0)? pVxConstant : -pVxConstant;
-        else if (!touchMove) pVx*=pVxFriction;
-        else if (brakes) pVx*=0.85f;
+        if (touchMove) pVx+=(lastX-pX>0)? pVxConstant : -pVxConstant;
+        else pVx*=pVxFriction;
     }
 
     private void collision(Block block){
 
     }
 
-    //Brake Button
-    private RectF brakeButton;
-    private void brakeInit(){
-        brakeButton=new RectF(0,max_y*7/8,max_x,max_y);
-    }
-    private void drawBrake(){
-        paint.setColor((brakes? Color.GRAY : Color.LTGRAY));
-        canvas.drawRect(brakeButton,paint);
+    //Block Stuff
+    private void obstacleInit(){
+        obstacleBound=max_y;
+        generateObstacles(0);
     }
 
-    //Block Stuff
     private ArrayList<Block>  blocks = new ArrayList<>();
     private void drawBlocks(){
         paint.setColor(Color.MAGENTA);
         for (Block block : blocks) block.draw(canvas,paint);
     }
+    private int blockNum = 8;
+    private int obstacleBound;
+
+    private void generateObstacles(int bottomBound){ //dif in bound is 2*max_y
+        int blockBottom = bottomBound;
+        int dBottom = 2*max_y/blockNum;
+        for (int i =0; i<blockNum; i++){
+            blocks.add(new Block(0+rand.nextInt(max_x/2),((int) max_x/2)+(rand.nextInt((int) (max_x/2-3*pRadius))), blockBottom,2*unit));
+            blockBottom-=dBottom;
+        }
+    }
     private void moveBlocks(float dy){
-        for (Block block : blocks) block.goDown(dy);
+        for (Block block : blocks)block.goDown(dy);
+        if (blocks.get(0).below(max_y)) blocks.remove(0);
     }
 }

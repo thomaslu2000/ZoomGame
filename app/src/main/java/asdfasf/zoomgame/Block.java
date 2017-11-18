@@ -19,4 +19,5 @@ public class Block {
     public void goDown(float y){
         blockRect.offset(0,y);
     }
+    public boolean below(int y){return blockRect.top>y;}
 }
