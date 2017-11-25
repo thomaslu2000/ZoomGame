@@ -270,7 +270,7 @@ public class GameView extends SurfaceView implements Runnable {
             //playSound(Sounds.lose);
         }
         else{
-            endText = "New High Score!\r\n"+GameActivity.wordPlace(a)+" Place!";
+            endText = GameActivity.wordPlace(a)+" Place!";
             //TODO fix
             //playSound(Sounds.win);
         }
