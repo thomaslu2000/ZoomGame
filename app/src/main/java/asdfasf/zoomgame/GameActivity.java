@@ -36,4 +36,13 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         gameView.resume();
     }
+
+    static String[] placeStr= {"First","Second","Third","Fourth","Fifth","Sixth","Seventh","Eighth","Ninth","Tenth"};
+    public static String wordPlace(int a) {
+        try{
+            return placeStr[a-1];
+        } catch (IndexOutOfBoundsException e){
+            return "";
+        }
+    }
 }

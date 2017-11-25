@@ -20,4 +20,5 @@ public class Block {
         blockRect.offset(0,y);
     }
     public boolean below(int y){return blockRect.top>y;}
+    public boolean intersect(RectF player){return RectF.intersects(blockRect,player);}
 }
