@@ -107,7 +107,9 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private boolean touchMove;
-    private int lastX;
+
+    private float lastX;
+    private float lastY;
     public boolean onTouchEvent(MotionEvent motionEvent) { //These are the touch sensores
         int x = (int) motionEvent.getX(); //These get the touch locations
         int y = (int) motionEvent.getY();
@@ -116,12 +118,11 @@ public class GameView extends SurfaceView implements Runnable {
                 case MotionEvent.ACTION_DOWN://just pressing down
                     touchMove = true;
                 case MotionEvent.ACTION_MOVE://dragging finger
-                    lastX = x;
+                    lastX=x;
+                    lastY=y;
                     break;
                 case MotionEvent.ACTION_UP://letting go
-                    touchMove = false;
-
-
+                    touchMove=false;
             }
         } else{
             if (motionEvent.getAction()==MotionEvent.ACTION_DOWN){
@@ -133,7 +134,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
         return true;
     }
-
 
     public void pause() {
         playing = false; //paused-->not playing
@@ -177,9 +177,10 @@ public class GameView extends SurfaceView implements Runnable {
     private float pX;
     private float pY;
     private float pVx;
+    private float pVy;
     private float pRadius;
-    private float pVxFriction=0.85f;
-    private float pVxConstant;
+    private float pVFriction=0.85f;
+    private float pVConstant=0.8f;
     private RectF pRect;
     private int justGotHit;
 
@@ -188,7 +189,6 @@ public class GameView extends SurfaceView implements Runnable {
         pY=max_y*3/4;
         pRadius=unit*1.5f;
         pRect=new RectF(pX-pRadius,pY-pRadius,pX+pRadius,pY+pRadius);
-        pVxConstant = unit/10f;
     }
 
     private void drawPlayer(){
@@ -202,10 +202,15 @@ public class GameView extends SurfaceView implements Runnable {
     }
     private void updatePlayer(){
         if ((pX<pRadius&&pVx<0) || (pX>max_x-pRadius&&pVx>0)) {pVx*=-0.05f;}
+        if ((pY<pRadius&&pVy<0) || (pY>max_y-pRadius&&pVy>0)) {pVy*=-0.05f;}
+        if (touchMove){
+            pVx=(lastX-pX)*pVConstant;
+            pVy=(lastY-pY)*pVConstant;
+        }
+        else {pVx*=pVFriction; pVy=pVFriction;}
         pX+=pVx;
-        pRect.offset(pVx,0);
-        if (touchMove) pVx+=(lastX-pX>0)? pVxConstant : -pVxConstant;
-        else pVx*=pVxFriction;
+        pY+=pVy;
+        pRect.offset(pVx,pVy);
     }
 
 
