@@ -61,6 +61,7 @@ public class GameView extends SurfaceView implements Runnable {
         playerInit();
         obstacleInit();
         healthInit();
+        powerupsInit();
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(2.5f*unit);
@@ -92,6 +93,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.WHITE);
             drawPlayer();
             drawBlocks();
+            drawPowerups();
             if (hitPoints>=0) {
                 drawHealth();
                 paint.setColor(Color.BLACK);
@@ -158,6 +160,7 @@ public class GameView extends SurfaceView implements Runnable {
     private float gameSpeedModifier = 8f;
     private void moveThings(int dy){
         moveBlocks(dy);
+        movePows(dy);
         obstacleBound-=dy;
         if (obstacleBound<=0){
             generateObstacles(-max_y);
@@ -172,14 +175,38 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private int hitPoints = 2;
+
     private void collisions(){
         if (justGotHit<=0) for(int i=0; i<4;i++) if (blocks.get(i).intersect(pRect)) hit();
+        //TODO ADD COLLISIONS FOR POWER UPS AND THEIR CONSEQUENCES
+        //TODO A DIFFERENT CONSEQUENCE FOR EACH TYPE
+        //TODO THEN REMOVED FROM THE ARRAY
+
     }
     private void hit(){
         hitPoints--;
         justGotHit+=1020;
     }
+    private int blockNum = 8;
+    private int numOfPowerUps = 3;
+    private int obstacleBound;
 
+    private void generateObstacles(int bottomBound){ //dif in bounds is 2*max_y
+        //Block generation
+        int blockBottom = bottomBound;
+        int dBottom = 2*max_y/blockNum;
+        for (int i =0; i<blockNum; i++){
+            blocks.add(new Block(0+rand.nextInt(max_x/2),((int) max_x/2)+(rand.nextInt((int) (max_x/2-3*pRadius))), blockBottom,2*unit));
+            blockBottom-=dBottom;
+        }
+
+        //Powerup generation
+        for (int i=0;i<numOfPowerUps;i++){
+            powerups.add(new Powerups(powerupRadius+rand.nextInt((int) (max_x-powerupRadius*2)),
+                    bottomBound-rand.nextInt(2*max_y), powerupRadius,rand.nextInt(numOfPowerUpTypes)));
+        }
+
+    }
 
     //Player Ball Stuff
     private float pX;
@@ -222,6 +249,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
 
+
     //Block Stuff
     private void obstacleInit(){
         obstacleBound=max_y;
@@ -233,42 +261,29 @@ public class GameView extends SurfaceView implements Runnable {
         paint.setColor(Color.MAGENTA);
         for (Block block : blocks) block.draw(canvas,paint);
     }
-    private int blockNum = 8;
-    private int obstacleBound;
 
-    private void generateObstacles(int bottomBound){ //dif in bound is 2*max_y
-        int blockBottom = bottomBound;
-        int dBottom = 2*max_y/blockNum;
-        for (int i =0; i<blockNum; i++){
-            blocks.add(new Block(0+rand.nextInt(max_x/2),((int) max_x/2)+(rand.nextInt((int) (max_x/2-3*pRadius))), blockBottom,2*unit));
-            blockBottom-=dBottom;
-        }
-    }
     private void moveBlocks(float dy){
         for (Block block : blocks)block.goDown(dy);
         if (blocks.get(0).below(max_y)) blocks.remove(0);
     }
 
-//    //powerups maybe kinda sorta
-//    private ArrayList<Power>  powerups = new ArrayList<>();
-//    private void drawPowerups(){
-//        for (Block block : blocks) block.draw(canvas,paint);
-//    }
-//    private int blockNum = 8;
-//    private int obstacleBound;
-//
-//    private void generateObstacles(int bottomBound){ //dif in bound is 2*max_y
-//        int blockBottom = bottomBound;
-//        int dBottom = 2*max_y/blockNum;
-//        for (int i =0; i<blockNum; i++){
-//            blocks.add(new Block(0+rand.nextInt(max_x/2),((int) max_x/2)+(rand.nextInt((int) (max_x/2-3*pRadius))), blockBottom,2*unit));
-//            blockBottom-=dBottom;
-//        }
-//    }
-//    private void moveBlocks(float dy){
-//        for (Block block : blocks)block.goDown(dy);
-//        if (blocks.get(0).below(max_y)) blocks.remove(0);
-//    }
+    //powerups maybe kinda sorta
+    private ArrayList<Powerups>  powerups = new ArrayList<>();
+    private float powerupRadius;
+    private int numOfPowerUpTypes=2;//TODO if you add more powerups, increase this number
+    private void drawPowerups(){
+        for (Powerups p : powerups) p.draw(canvas,paint);
+    }
+
+    private void movePows(float dy){
+        for (Powerups p : powerups) p.goDown(dy);
+        if (powerups.size()>0 && powerups.get(0).below(max_y)) powerups.remove(0);
+    }
+
+    private void powerupsInit(){
+        powerupRadius=unit;
+    }
+    //The powerups are created in generate obstacles
 
     //Health bar
     private RectF[] healthBars = new RectF[3];
@@ -305,7 +320,6 @@ public class GameView extends SurfaceView implements Runnable {
         }
         else{
             endText = GameActivity.wordPlace(a)+" Place!";
-            //TODO fix
             //playSound(Sounds.win);
         }
     }

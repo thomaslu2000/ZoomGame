@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
 
+
         deviceSize=size.x+size.y;
 
         setContentView(R.layout.activity_main);
