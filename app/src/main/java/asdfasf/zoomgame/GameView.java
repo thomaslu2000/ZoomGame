@@ -249,6 +249,27 @@ public class GameView extends SurfaceView implements Runnable {
         if (blocks.get(0).below(max_y)) blocks.remove(0);
     }
 
+//    //powerups maybe kinda sorta
+//    private ArrayList<Power>  powerups = new ArrayList<>();
+//    private void drawPowerups(){
+//        for (Block block : blocks) block.draw(canvas,paint);
+//    }
+//    private int blockNum = 8;
+//    private int obstacleBound;
+//
+//    private void generateObstacles(int bottomBound){ //dif in bound is 2*max_y
+//        int blockBottom = bottomBound;
+//        int dBottom = 2*max_y/blockNum;
+//        for (int i =0; i<blockNum; i++){
+//            blocks.add(new Block(0+rand.nextInt(max_x/2),((int) max_x/2)+(rand.nextInt((int) (max_x/2-3*pRadius))), blockBottom,2*unit));
+//            blockBottom-=dBottom;
+//        }
+//    }
+//    private void moveBlocks(float dy){
+//        for (Block block : blocks)block.goDown(dy);
+//        if (blocks.get(0).below(max_y)) blocks.remove(0);
+//    }
+
     //Health bar
     private RectF[] healthBars = new RectF[3];
     private int[] colors = {Color.RED,Color.YELLOW,Color.GREEN};
