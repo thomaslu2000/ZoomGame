@@ -276,7 +276,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void movePows(float dy){
-        for (Powerups p : powerups) p.goDown(dy);
+        //TODO MAKE ALL THE POWERUPS IN THE POWERUPS ARRAY ACTUALLY GO DOWN BY DY
         if (powerups.size()>0 && powerups.get(0).below(max_y)) powerups.remove(0);
     }
 
