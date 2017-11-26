@@ -40,6 +40,8 @@ public class GameView extends SurfaceView implements Runnable {
     private int distanceTraveled;
     private Random rand;
     private RectF exit;
+    private float gameSpeed;
+
 
 
     public GameView(Context context, int screenX, int screenY) {
@@ -55,10 +57,12 @@ public class GameView extends SurfaceView implements Runnable {
         unit=(screenX+screenY)/80;
         exit=new RectF(max_x/2-8*unit,max_y/2-4*unit,max_x/2+8*unit,max_y/2+4*unit);
 
+        gameSpeed=unit/4f;
         playerInit();
         obstacleInit();
         healthInit();
 
+        paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(2.5f*unit);
 
     }
@@ -73,26 +77,27 @@ public class GameView extends SurfaceView implements Runnable {
             sleep(); //pause for a few millisecs before starting next frame
         }
     }
-    //TODO draw distance, finish thinga
     private void update(){
         if (inProgress&&hitPoints<0){
             lost();
         }
         updatePlayer();
-        moveThings(10);
+        moveThings((int) gameSpeed);
         if (inProgress)collisions();
+
     }
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
-            canvas = surfaceHolder.lockCanvas(); //You have to do this whenever you want to draw
-            canvas.drawColor(Color.WHITE); //Background is white
-            //drawing in here
+            canvas = surfaceHolder.lockCanvas(); //Draw things here
+            canvas.drawColor(Color.WHITE);
             drawPlayer();
             drawBlocks();
-            if (hitPoints>=0) drawHealth();
-            else {
-                drawEndWords();
+            if (hitPoints>=0) {
+                drawHealth();
+                paint.setColor(Color.BLACK);
+                canvas.drawText("Distance: "+distanceTraveled, max_x/2,15*max_y/16,paint);
             }
+            else {drawEndWords();}
 
             surfaceHolder.unlockCanvasAndPost(canvas); //When you finished drawing the frame, you have to do this to save the changes
         }
@@ -150,12 +155,15 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     //General Functions
+    private float gameSpeedModifier = 8f;
     private void moveThings(int dy){
         moveBlocks(dy);
         obstacleBound-=dy;
         if (obstacleBound<=0){
             generateObstacles(-max_y);
             obstacleBound+=2*max_y;
+            gameSpeed+=unit/gameSpeedModifier;
+            gameSpeedModifier+=4;
         }
         if (inProgress) distanceTraveled+=dy;
     }
@@ -261,7 +269,7 @@ public class GameView extends SurfaceView implements Runnable {
         paint.setColor(Color.LTGRAY);
         canvas.drawRect(exit,paint);
         paint.setColor(Color.BLACK);
-        paint.setTextAlign(Paint.Align.CENTER);
+
         canvas.drawText("Main Menu",max_x/2,max_y/2+max_y/64,paint);
         canvas.drawText(endText,max_x/2,exit.top-max_y/8,paint);
         canvas.drawText("Score: "+distanceTraveled,max_x/2,exit.bottom+max_y/8,paint);
