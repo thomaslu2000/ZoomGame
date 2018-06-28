@@ -207,7 +207,7 @@ public class GameView extends SurfaceView implements Runnable {
         justGotHit+=810;
     }
     private int blockNum = 8;
-    private int numOfPowerUps = 3;
+    private int numOfPowerUps = 2;
     private int obstacleBound;
 
     private void generateObstacles(int bottomBound){ //dif in bounds is 2*max_y
