@@ -71,6 +71,8 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         while (playing) { //This is the main loop for the game
+            music(); //Checks if music is playing and starts the music if it isn't
+
             update(); //Move all objects
 
             draw(); //Actually draw them
@@ -113,6 +115,21 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private void music(){
+        if (!GameActivity.music.isPlaying()) GameActivity.music.start();
+    }
+
+    private static void playSound(int a){ //hit=0, power-up=1, win=2, lose=3
+        if (GameActivity.mediaArray.get(a).isPlaying()) {
+            GameActivity.mediaArray.get(a).stop();
+            try {
+                GameActivity.mediaArray.get(a).prepare();
+            } catch (Exception e) {
+            }
+        }
+        GameActivity.mediaArray.get(a).start();
+    }
+
     private boolean touchMove;
 
     private float lastX;
@@ -134,7 +151,7 @@ public class GameView extends SurfaceView implements Runnable {
         } else{
             if (motionEvent.getAction()==MotionEvent.ACTION_DOWN){
                 if (exit.contains(x,y)) {
-                    //if (GameActivity.music.isPlaying()) GameActivity.music.stop();
+                    if (GameActivity.music.isPlaying()) GameActivity.music.stop();
                     leave();
                 }
             }
@@ -185,6 +202,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
     private void hit(){
+        playSound(0);
         hitPoints--;
         justGotHit+=810;
     }
@@ -210,6 +228,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void gotPowerUp(int type){
+        playSound(1);
         switch(type){
             case 0: //invisible
                 invisiblePower=100;
@@ -334,11 +353,11 @@ public class GameView extends SurfaceView implements Runnable {
         int a = updateHighScores(distanceTraveled);
         if (a==0){
             endText= "Game Over";
-            //playSound(Sounds.lose);
+            playSound(3);
         }
         else{
             endText = GameActivity.wordPlace(a)+" Place!";
-            //playSound(Sounds.win);
+            playSound(2);
         }
     }
     public int updateHighScores(int a){
