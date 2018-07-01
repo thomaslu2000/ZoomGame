@@ -25,13 +25,13 @@ public class HighScoresActivity extends AppCompatActivity {
         int[] ids = {R.id.FirstPlaceScore,R.id.SecondPlaceScore,R.id.ThirdPlaceScore,R.id.FourthPlaceScore,R.id.FifthPlaceScore,
                 R.id.SixthPlaceScore,R.id.SeventhPlaceScore,R.id.EighthPlaceScore,R.id.NinthPlaceScore,R.id.TenthPlaceScore};
         for (int i=0;i<ids.length;i++) {
-            TextView textView = (TextView) findViewById(ids[i]);
+            TextView textView = findViewById(ids[i]);
             textView.setText(GameActivity.wordPlace(i+1)+" Place: "+prefs.getInt("place"+(i+1),0));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
         }
-        TextView textView = (TextView) findViewById(R.id.HighScores);
+        TextView textView = findViewById(R.id.HighScores);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize*1.2f);
-        Button mainMenu = (Button) findViewById(R.id.button3);
+        Button mainMenu = findViewById(R.id.button3);
         mainMenu.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
     }
     @Override

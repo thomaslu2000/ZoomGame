@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        LinearLayout l = (LinearLayout) findViewById(R.id.MainLayout);
+        LinearLayout l = findViewById(R.id.MainLayout);
         l.setBackgroundColor(Color.WHITE);
 
         int textSize = (size.x<size.y)?size.y/30:size.x/30;
         for(int i=0;i<buttonIds.length;i++){
-            Button button = (Button) findViewById(buttonIds[i]);
+            Button button = findViewById(buttonIds[i]);
             button.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize);
         }
 
@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
         intent=new Intent(this,HighScoresActivity.class);
         startActivity(intent);
     }
-    /*public void startHelp(android.view.View view){
+    public void startHelp(android.view.View view){
         intent=new Intent(this,HelpActivity.class);
         startActivity(intent);
-    }*/
+    }
     public void initHighScores(){
         SharedPreferences.Editor editor = getSharedPreferences(prefName,MODE_PRIVATE).edit();
         SharedPreferences prefs = getSharedPreferences(prefName,MODE_PRIVATE);
