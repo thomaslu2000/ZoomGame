@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 public class Powerups {
+    public static int POWERUP_TYPES=3;
     private RectF hitBox;
     private float x;
     private float y; //These are so the object will actually remember their data.
@@ -36,6 +37,13 @@ public class Powerups {
             case 1: //heal
                 paint.setColor(Color.GREEN);
                 canvas.drawCircle(x, y, radius, paint);
+                break;
+
+            case 2: //slow
+                paint.setColor(Color.YELLOW);
+                canvas.drawCircle(x, y, radius, paint);
+                paint.setARGB(255, 255, 150, 50);
+                canvas.drawCircle(x, y, radius / 2, paint);
                 break;
         }
     }

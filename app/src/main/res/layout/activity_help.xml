@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="Text for help screen 1"
             android:cropToPadding="false"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/help1" />
@@ -56,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="Text for help screen 2"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/help2" />
 
@@ -85,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="Text for help screen 3"
             app:srcCompat="@drawable/help3" />
 
         <TextView
@@ -113,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:contentDescription="Text for help screen 4"
             app:srcCompat="@drawable/help4" />
 
         <TextView
@@ -120,6 +124,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Collect the light blue power-ups to phase through obstacles for a short time"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Tut5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/image5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="Text for help screen 5"
+            app:srcCompat="@drawable/help5" />
+
+        <TextView
+            android:id="@+id/textNum5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Collect the yellow power-ups to slow down time"
             android:textSize="18sp" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

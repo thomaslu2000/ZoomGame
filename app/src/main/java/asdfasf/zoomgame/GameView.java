@@ -85,7 +85,9 @@ public class GameView extends SurfaceView implements Runnable {
             lost();
         }
         updatePlayer();
-        moveThings((int) gameSpeed);
+        int dy = (int) gameSpeed;
+        if (slowTime>0) dy/=2;
+        moveThings(dy);
         if (inProgress)collisions();
 
     }
@@ -96,6 +98,10 @@ public class GameView extends SurfaceView implements Runnable {
             drawPlayer();
             drawPowerups();
             drawBlocks();
+            if (slowTime>0){
+                canvas.drawARGB(50,160,250,255);
+                slowTime--;
+            }
             if (hitPoints>=0) {
                 drawHealth();
                 paint.setColor(Color.BLACK);
@@ -204,6 +210,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void hit(){
         playSound(0);
         hitPoints--;
+        System.out.println(invisiblePower+" "+justGotHit);
         justGotHit+=810;
     }
     private int blockNum = 8;
@@ -222,7 +229,7 @@ public class GameView extends SurfaceView implements Runnable {
         //Powerup generation
         for (int i=0;i<numOfPowerUps;i++){
             powerups.add(new Powerups(powerupRadius+rand.nextInt((int) (max_x-powerupRadius*2)),
-                    bottomBound - rand.nextInt(2*max_y), powerupRadius,rand.nextInt(numOfPowerUpTypes)));
+                    bottomBound - rand.nextInt(2*max_y), powerupRadius,rand.nextInt(Powerups.POWERUP_TYPES)));
         }
 
     }
@@ -235,6 +242,9 @@ public class GameView extends SurfaceView implements Runnable {
                 break;
             case 1: //heal
                 if (hitPoints<2) hitPoints++;
+                break;
+            case 2: //slow
+                slowTime=70;
                 break;
         }
     }
@@ -250,6 +260,7 @@ public class GameView extends SurfaceView implements Runnable {
     private RectF pRect;
     private int justGotHit;
     private int invisiblePower;
+    private int slowTime;
 
     private void playerInit(){
         pX=max_x/2;
@@ -307,7 +318,6 @@ public class GameView extends SurfaceView implements Runnable {
     //powerups
     private ArrayList<Powerups>  powerups = new ArrayList<>();
     private float powerupRadius;
-    private int numOfPowerUpTypes=2;//TODO if you add more powerups, increase this number
     private void drawPowerups(){
         for (Powerups p : powerups) p.draw(canvas,paint);
     }
