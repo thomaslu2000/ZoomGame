@@ -1,4 +1,4 @@
-package asdfasf.zoomgame;
+package corksproductions.SpeederBall;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

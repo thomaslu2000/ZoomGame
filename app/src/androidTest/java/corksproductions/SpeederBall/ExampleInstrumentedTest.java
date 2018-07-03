@@ -1,4 +1,4 @@
-package asdfasf.zoomgame;
+package corksproductions.SpeederBall;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

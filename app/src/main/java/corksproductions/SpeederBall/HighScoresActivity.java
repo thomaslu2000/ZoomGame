@@ -1,4 +1,4 @@
-package asdfasf.zoomgame;
+package corksproductions.SpeederBall;
 
 import android.content.SharedPreferences;
 import android.graphics.Point;

@@ -1,6 +1,5 @@
-package asdfasf.zoomgame;
+package corksproductions.SpeederBall;
 
-import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import android.support.constraint.ConstraintLayout;
 import android.util.TypedValue;
 import android.view.*;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

@@ -1,4 +1,4 @@
-package asdfasf.zoomgame;
+package corksproductions.SpeederBall;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
-import static asdfasf.zoomgame.MainActivity.prefName;
+import static corksproductions.SpeederBall.MainActivity.prefName;
 
 /**
  * Created by Thomas on 11/15/2017.

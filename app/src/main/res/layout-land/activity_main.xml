@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="asdfasf.zoomgame.MainActivity">
+    tools:context="corksproductions.SpeederBall.MainActivity">
 
     <LinearLayout
         android:id="@+id/MainLayout"
@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.45"
-                android:text="Zoom"
+                android:text="Speeder Ball"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="?android:attr/colorActivatedHighlight"
