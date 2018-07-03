@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'Speeder Ball'
+            keyPassword 'password'
+            storeFile file('/home/thomas/Documents/stuff/funKeyStores.jks')
+            storePassword 'password'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "corksproductions.SpeederBall"
@@ -9,12 +17,21 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            debuggable false
+            jniDebuggable false
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    productFlavors {
     }
 }
 
